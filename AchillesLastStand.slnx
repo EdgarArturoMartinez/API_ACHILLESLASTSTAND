@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AchillesLastStand.API/AchillesLastStand.API.csproj" />
+    <Project Path="src/AchillesLastStand.Application/AchillesLastStand.Application.csproj" />
+    <Project Path="src/AchillesLastStand.Domain/AchillesLastStand.Domain.csproj" />
+    <Project Path="src/AchillesLastStand.Infrastructure/AchillesLastStand.Infrastructure.csproj" />
+  </Folder>
+</Solution>

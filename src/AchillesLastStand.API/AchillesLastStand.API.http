@@ -1,0 +1,6 @@
+@AchillesLastStand.API_HostAddress = http://localhost:5190
+
+GET {{AchillesLastStand.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
