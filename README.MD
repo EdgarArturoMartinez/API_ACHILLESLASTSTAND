@@ -32,16 +32,17 @@ Build a **production-ready ASP.NET Core REST API** to manage job applications wi
 We'll improve the API incrementally with these features:
 
 1. **Configure a search by company and role** - Filtering capabilities
-2. **DTOs (Data Transfer Objects)** - Separate API models from domain entities
-3. **AutoMapper** - Automatic mapping between entities and DTOs
-4. **FluentValidation** - Advanced validation rules
-5. **Global Exception Handling** - Middleware for consistent error responses
-6. **Logging (Serilog)** - Structured logging
-7. **Authentication/Authorization (JWT)** - Secure endpoints
-8. **Unit Tests (xUnit + Moq)** - Test repositories and controllers
-9. **API Versioning** - Version your endpoints
-10. **HATEOAS** - Hypermedia links in responses
-11. **Health Checks** - Endpoint for monitoring
+2. **Modify Role and Status table fields from Nvarchar(200) to Nvarchar(2000)** - DB Administration
+3. **DTOs (Data Transfer Objects)** - Separate API models from domain entities
+4. **AutoMapper** - Automatic mapping between entities and DTOs
+5. **FluentValidation** - Advanced validation rules
+6. **Global Exception Handling** - Middleware for consistent error responses
+7. **Logging (Serilog)** - Structured logging
+8. **Authentication/Authorization (JWT)** - Secure endpoints
+9. **Unit Tests (xUnit + Moq)** - Test repositories and controllers
+10. **API Versioning** - Version your endpoints
+11. **HATEOAS** - Hypermedia links in responses
+12. **Health Checks** - Endpoint for monitoring
 
 ---
 
@@ -101,26 +102,26 @@ dotnet list .\src\AchillesLastStand.Infrastructure\ package
 - **Phase 2 - Enhancements**: 🚀 **IN PROGRESS** (Steps 9-19)
 
 ### Quick Status:
-- **Last Completed Step**: #Step 8 - Create API Controller with RESTful Endpoints ✅
-- **Next Step**: #Step 9 - Add Search/Filtering by Company and Role 🎯
-- **Database Status**: ✅ Database DBACHILLESLASTSTAND created and operational
-- **API Status**: ✅ RESTful API with Swagger documentation ready
-- **Current Sprint Goal**: Add filtering capabilities for Company and Role
+- **Last Completed Step**: #Step 10 - Modify Role and Status Fields to Nvarchar(2000) ✅
+- **Next Step**: #Step 11 - Create DTOs (Data Transfer Objects) 🎯
+- **Database Status**: ✅ Database schema updated (Role & Status: nvarchar(2000))
+- **API Status**: ✅ RESTful API with Swagger + Search/Filtering ready
+- **Current Sprint Goal**: Implement DTOs to separate API models from domain entities
 
 ### Files Created (Quick Check):
 ```
 ✅ Domain/Entities/JobApplication.cs
-✅ Application/Interfaces/IJobApplicationRepository.cs
+✅ Application/Interfaces/IJobApplicationRepository.cs (+ SearchAsync)
 ✅ Infrastructure/Data/ApplicationDbContext.cs
-✅ Infrastructure/Repositories/JobApplicationRepository.cs
+✅ Infrastructure/Repositories/JobApplicationRepository.cs (+ Search Implementation)
 ✅ API/Program.cs (Controllers + Swagger Configured)
 ✅ API/appsettings.json (Connection String Configured)
 ✅ Infrastructure/Migrations/InitialCreate.cs (Database Migration)
 ✅ Database: DBACHILLESLASTSTAND (Created & Applied)
-✅ API/Controllers/JobApplicationsController.cs (RESTful Endpoints)
+✅ API/Controllers/JobApplicationsController.cs (RESTful + Search Endpoints)
 
 🎉 Phase 1 COMPLETE - Base CRUD API Ready!
-🚀 Phase 2 Starting - Enhancements and Best Practices
+🚀 Phase 2 IN PROGRESS - Search/Filtering Added!
 ```
 
 ### Steps Progress Summary:
@@ -140,17 +141,18 @@ dotnet list .\src\AchillesLastStand.Infrastructure\ package
 #### **Phase 2: Enhancements (In Progress)** 🚀
 | Step | Title | Status | Date Completed |
 |------|-------|--------|----------------|
-| #9 | Search/Filtering by Company and Role | ⏳ **NEXT** | - |
-| #10 | DTOs (Data Transfer Objects) | 🔜 Pending | - |
-| #11 | AutoMapper Configuration | 🔜 Pending | - |
-| #12 | FluentValidation | 🔜 Pending | - |
-| #13 | Global Exception Handling Middleware | 🔜 Pending | - |
-| #14 | Logging with Serilog | 🔜 Pending | - |
-| #15 | Authentication/Authorization (JWT) | 🔜 Pending | - |
-| #16 | Unit Tests (xUnit + Moq) | 🔜 Pending | - |
-| #17 | API Versioning | 🔜 Pending | - |
-| #18 | HATEOAS Implementation | 🔜 Pending | - |
-| #19 | Health Checks | 🔜 Pending | - |
+| #9 | Search/Filtering by Company and Role | ✅ | Feb 1, 2026 |
+| #10 | Modify Role and Status to Nvarchar(2000) | ✅ | Feb 1, 2026 |
+| #11 | DTOs (Data Transfer Objects) | ⏳ **NEXT** | - |
+| #12 | AutoMapper Configuration | 🔜 Pending | - |
+| #13 | FluentValidation | 🔜 Pending | - |
+| #14 | Global Exception Handling Middleware | 🔜 Pending | - |
+| #15 | Logging with Serilog | 🔜 Pending | - |
+| #16 | Authentication/Authorization (JWT) | 🔜 Pending | - |
+| #17 | Unit Tests (xUnit + Moq) | 🔜 Pending | - |
+| #18 | API Versioning | 🔜 Pending | - |
+| #19 | HATEOAS Implementation | 🔜 Pending | - |
+| #20 | Health Checks | 🔜 Pending | - |
 
 
 
@@ -1197,6 +1199,386 @@ AchillesLastStandAPI/
 ```
 
 ---
+
+### #Step 9 - Add Search/Filtering by Company and Role ✅ COMPLETED
+
+**What we did:**
+- Added `SearchAsync` method to `IJobApplicationRepository` interface with optional query parameters
+- Implemented search functionality in `JobApplicationRepository` using LINQ and IQueryable
+- Created new search endpoint in `JobApplicationsController` with query string parameters
+- Applied case-insensitive, partial-match filtering for Company and Role fields
+- Tested search endpoint in Swagger with various filter combinations
+
+**New Interface Method:**
+```csharp
+Task<IEnumerable<JobApplication>> SearchAsync(string? company = null, string? role = null);
+```
+
+**Repository Implementation:**
+- Used `IQueryable<T>` for deferred execution and query composition
+- Applied conditional filtering based on provided parameters
+- Used `Contains()` with `StringComparison.OrdinalIgnoreCase` for case-insensitive partial matching
+- Maintained `AsNoTracking()` for read-only performance optimization
+
+**Controller Endpoint:**
+```csharp
+[HttpGet("search")]
+public async Task<ActionResult<IEnumerable<JobApplication>>> Search(
+    [FromQuery] string? company = null, 
+    [FromQuery] string? role = null)
+```
+
+**Why this is important (Interview Knowledge):**
+
+**IQueryable vs IEnumerable (Critical Interview Topic):**
+
+**IQueryable<T>:**
+- **Definition**: Allows building queries that are translated to SQL and executed on the database server
+- **Execution**: Deferred execution - query isn't run until you call `ToList()`, `ToArray()`, or iterate
+- **Provider**: Uses LINQ-to-SQL, LINQ-to-Entities, etc. to translate C# expressions to database queries
+- **Benefits**: 
+  - Filtering happens on the database (efficient)
+  - Only filtered data is returned to application
+  - Can compose multiple filters before execution
+  - Supports query optimization by database engine
+
+**IEnumerable<T>:**
+- **Definition**: Represents an in-memory collection that can be iterated
+- **Execution**: Immediate execution for database queries - all data loaded into memory first
+- **Provider**: LINQ-to-Objects - works on in-memory collections
+- **Downside**: Filtering happens in application memory after all data is loaded
+
+**Our Implementation (Best Practice):**
+```csharp
+// Start with IQueryable - database query not executed yet
+IQueryable<JobApplication> query = _context.JobApplications.AsNoTracking();
+
+// Build query conditionally - still not executed
+if (!string.IsNullOrWhiteSpace(company))
+{
+    query = query.Where(j => j.Company.Contains(company, StringComparison.OrdinalIgnoreCase));
+}
+
+// Execute query and return results
+return await query.ToListAsync(); // ← Query executes here
+```
+
+**Why This Matters:**
+```csharp
+// ❌ BAD - Loads ALL records into memory, then filters
+IEnumerable<JobApplication> allApps = await _context.JobApplications.ToListAsync();
+return allApps.Where(j => j.Company.Contains(company));
+
+// ✅ GOOD - Filters in SQL, only returns matching records
+IQueryable<JobApplication> query = _context.JobApplications;
+query = query.Where(j => j.Company.Contains(company));
+return await query.ToListAsync();
+```
+
+**Query String Parameters ([FromQuery]):**
+- **Definition**: Values passed in the URL after `?` character
+- **Format**: `/api/jobapplications/search?company=Microsoft&role=Developer`
+- **ASP.NET Core Binding**: `[FromQuery]` attribute tells model binder to get values from query string
+- **Optional Parameters**: `string? company = null` makes parameters optional
+- **Best Practice for Filtering**: Query strings are ideal for search/filter operations (not route parameters)
+
+**Typical Interview Questions Answered:**
+
+**Q: What is IQueryable and how is it different from IEnumerable?**  
+A: IQueryable allows building database queries with deferred execution and server-side filtering. IEnumerable loads data into memory first, then filters in application memory. IQueryable is more efficient for database queries.
+
+**Q: What is deferred execution in LINQ?**  
+A: Queries are not executed when defined, but when enumerated (ToList(), foreach, etc.). This allows building complex queries before sending to database.
+
+**Q: Why use query string parameters for filtering instead of route parameters?**  
+A: Query strings are semantically correct for optional search criteria. Route parameters are for required resource identifiers. Query strings support multiple optional parameters elegantly.
+
+**Production Best Practices Achieved:**
+- ✅ **Efficient Queries**: Server-side filtering with IQueryable
+- ✅ **User-Friendly**: Case-insensitive partial matching
+- ✅ **RESTful Design**: Proper use of query string parameters
+- ✅ **Optional Parameters**: Flexible filtering (0, 1, or multiple filters)
+- ✅ **Performance**: AsNoTracking for read operations
+- ✅ **Maintainability**: Clean, composable query building
+
+**Commands executed:**
+```powershell
+dotnet build
+dotnet run --project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+# Tested in Swagger: http://localhost:5190/swagger
+```
+
+**API Endpoints Updated:**
+
+| Method | Endpoint | Description | Query Params | Response |
+|--------|----------|-------------|--------------|----------|
+| GET | `/api/jobapplications/search` | **NEW: Search/filter** | `?company=X&role=Y` | `JobApplication[]` |
+
+**Code Files Modified:**
+```
+✓ Application/Interfaces/IJobApplicationRepository.cs
+✓ Infrastructure/Repositories/JobApplicationRepository.cs
+✓ API/Controllers/JobApplicationsController.cs
+```
+
+---
+
+### #Step 10 - Modify Role and Status Fields to Nvarchar(2000) ✅ COMPLETED
+
+**What we did:**
+- Updated DbContext Fluent API configuration to change `Role` and `Status` max length from 100/50 to 2000
+- Created EF Core migration `UpdateRoleAndStatusLength` to alter database schema
+- Applied migration to update SQL Server table columns
+- Verified database schema changes using sqlcmd
+- **Fixed Step #9 Search Issue**: Replaced `Contains(StringComparison)` with `EF.Functions.Like()` for SQL translation
+
+**DbContext Configuration Changes:**
+```csharp
+// Before:
+entity.Property(e => e.Role).HasMaxLength(100);
+entity.Property(e => e.Status).HasMaxLength(50);
+
+// After:
+entity.Property(e => e.Role).HasMaxLength(2000);
+entity.Property(e => e.Status).HasMaxLength(2000);
+```
+
+**Migration Generated:**
+- File: `Migrations/<timestamp>_UpdateRoleAndStatusLength.cs`
+- `Up()`: Alters columns to nvarchar(2000)
+- `Down()`: Reverts columns to original sizes (rollback capability)
+
+**Database Changes:**
+```sql
+-- Generated SQL (executed by migration)
+ALTER TABLE JobApplications 
+ALTER COLUMN Role nvarchar(2000) NOT NULL;
+
+ALTER TABLE JobApplications 
+ALTER COLUMN Status nvarchar(2000) NOT NULL;
+```
+
+**Search Method Fix (Step #9 Update):**
+- **Problem**: `Contains(string, StringComparison.OrdinalIgnoreCase)` cannot be translated to SQL by EF Core
+- **Solution**: Use `EF.Functions.Like()` which translates to SQL `LIKE` operator
+- **Before**: `j.Company.Contains(company, StringComparison.OrdinalIgnoreCase)`
+- **After**: `EF.Functions.Like(j.Company, $"%{company}%")`
+
+**Why this is important (Interview Knowledge):**
+
+**Database Schema Evolution (Critical Concept):**
+- **Definition**: The process of modifying database structure over time while preserving data
+- **EF Core Migrations**: Provides version control for database schema, just like Git for code
+- **Non-Destructive vs Destructive Changes**:
+  - **Non-Destructive**: Increasing column size, adding nullable columns (safe, preserves data)
+  - **Destructive**: Decreasing column size, deleting columns, changing data types (requires data migration)
+
+**ALTER COLUMN Operations:**
+```sql
+-- Safe: Increasing max length (our case)
+ALTER COLUMN Role nvarchar(2000)  -- from nvarchar(100) ✅ SAFE
+
+-- Risky: Decreasing max length
+ALTER COLUMN Role nvarchar(50)    -- from nvarchar(100) ⚠️ Data loss if existing values > 50 chars
+
+-- Risky: Changing data type
+ALTER COLUMN Payment nvarchar(50) -- from decimal(18,2) ⚠️ Loses numeric precision
+```
+
+**Migration Best Practices:**
+
+**1. Always Review Generated Migrations:**
+```csharp
+// ALWAYS check the Up() and Down() methods before applying
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+    // Verify this SQL makes sense for your data
+}
+```
+
+**2. Test Migrations in Development First:**
+```powershell
+# Apply migration
+dotnet ef database update
+
+# If something goes wrong, rollback
+dotnet ef database update PreviousMigrationName
+```
+
+**3. Handle Data Migration for Destructive Changes:**
+```csharp
+// Example: If you need to split a column
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+    // 1. Add new columns
+    migrationBuilder.AddColumn<string>("FirstName", "Users");
+    migrationBuilder.AddColumn<string>("LastName", "Users");
+    
+    // 2. Migrate data
+    migrationBuilder.Sql("UPDATE Users SET FirstName = SUBSTRING(FullName, 1, CHARINDEX(' ', FullName)-1)");
+    
+    // 3. Drop old column
+    migrationBuilder.DropColumn("FullName", "Users");
+}
+```
+
+**EF.Functions.Like() vs String.Contains():**
+
+**Why EF.Functions.Like()?**
+- **SQL Translation**: `EF.Functions.Like()` is specifically designed to translate to SQL `LIKE`
+- **Performance**: Executes on database server, not in application memory
+- **Database Features**: Leverages database collation settings for case-sensitivity
+
+```csharp
+// ❌ DOESN'T WORK - Cannot translate StringComparison to SQL
+query.Where(j => j.Company.Contains(company, StringComparison.OrdinalIgnoreCase))
+
+// ✅ WORKS - Translates to SQL LIKE
+query.Where(j => EF.Functions.Like(j.Company, $"%{company}%"))
+
+// Generated SQL:
+// SELECT * FROM JobApplications WHERE Company LIKE '%microsoft%'
+```
+
+**SQL LIKE Patterns:**
+```csharp
+// Starts with
+EF.Functions.Like(j.Company, $"{company}%")     // "Micro%" matches "Microsoft"
+
+// Ends with
+EF.Functions.Like(j.Company, $"%{company}")     // "%soft" matches "Microsoft"
+
+// Contains (what we use)
+EF.Functions.Like(j.Company, $"%{company}%")    // "%cro%" matches "Microsoft"
+
+// Exact match (with case-sensitivity depending on collation)
+EF.Functions.Like(j.Company, company)           // "Microsoft" matches "Microsoft"
+```
+
+**SQL Server Collation (Case-Sensitivity):**
+- **SQL_Latin1_General_CP1_CI_AS**: Case-Insensitive, Accent-Sensitive (default)
+  - "Microsoft" = "microsoft" = "MICROSOFT" ✅
+- **SQL_Latin1_General_CP1_CS_AS**: Case-Sensitive, Accent-Sensitive
+  - "Microsoft" ≠ "microsoft" ❌
+
+**Our Implementation:**
+```csharp
+if (!string.IsNullOrWhiteSpace(company))
+{
+    // Uses database collation for case-sensitivity
+    // SQL Server default is case-insensitive
+    query = query.Where(j => EF.Functions.Like(j.Company, $"%{company}%"));
+}
+```
+
+**Migration Rollback Strategy:**
+```powershell
+# List all migrations
+dotnet ef migrations list
+
+# Rollback to specific migration (executes Down() methods)
+dotnet ef database update InitialCreate
+
+# Remove last migration (only if not applied)
+dotnet ef migrations remove
+```
+
+**Production Deployment Best Practices:**
+
+**1. Generate SQL Scripts for Production:**
+```powershell
+# Generate SQL script instead of applying directly
+dotnet ef migrations script --output migration.sql
+
+# Review the SQL before running in production
+# Run SQL through your DBA or deployment pipeline
+```
+
+**2. Zero-Downtime Migrations:**
+```
+Step 1: Add new column (nullable)
+Step 2: Deploy code that writes to both old and new columns
+Step 3: Backfill data in new column
+Step 4: Deploy code that only uses new column
+Step 5: Drop old column
+```
+
+**3. Test Migration Rollback:**
+```powershell
+# Always verify you can rollback
+dotnet ef database update PreviousMigration
+dotnet ef database update LatestMigration
+```
+
+**Typical Interview Questions Answered:**
+
+**Q: What's the difference between AddColumn and AlterColumn?**  
+A: AddColumn creates a new column, AlterColumn modifies an existing column (data type, length, nullability, etc.).
+
+**Q: How do EF Core migrations handle existing data?**  
+A: Migrations preserve data by default. For non-destructive changes (increasing length), data is safe. For destructive changes (decreasing length, changing type), you must handle data migration manually.
+
+**Q: Can you rollback a migration in production?**  
+A: Yes, by running `database update <PreviousMigration>` which executes the Down() methods. However, if Down() is destructive, you may lose data.
+
+**Q: Why not use Contains(string, StringComparison) with EF Core?**  
+A: EF Core cannot translate .NET StringComparison enum to SQL. Use EF.Functions.Like() instead, which translates to SQL LIKE operator.
+
+**Q: How does SQL Server handle case-sensitivity in LIKE?**  
+A: It depends on database collation. Default SQL Server collation (SQL_Latin1_General_CP1_CI_AS) is case-insensitive, so LIKE is case-insensitive.
+
+**Q: What if migration fails mid-execution?**  
+A: EF Core wraps migrations in a transaction. If any operation fails, the entire migration is rolled back automatically (all-or-nothing).
+
+**Production Best Practices Achieved:**
+- ✅ **Schema Versioning**: Database changes tracked in migrations
+- ✅ **Non-Destructive Change**: Increased column size safely
+- ✅ **Rollback Capability**: Down() method allows reverting changes
+- ✅ **Data Preservation**: Existing data maintained during schema change
+- ✅ **SQL Translation**: Search uses EF.Functions.Like() for proper SQL generation
+- ✅ **Code-First Workflow**: Database schema defined in C# code, not SQL scripts
+
+**Commands executed:**
+```powershell
+# Update DbContext Fluent API (HasMaxLength changed to 2000)
+
+# Create migration
+dotnet ef migrations add UpdateRoleAndStatusLength --project .\src\AchillesLastStand.Infrastructure\AchillesLastStand.Infrastructure.csproj --startup-project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+
+# Apply migration
+dotnet ef database update --project .\src\AchillesLastStand.Infrastructure\AchillesLastStand.Infrastructure.csproj --startup-project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+
+# Verify schema changes
+sqlcmd -S localhost -d DBACHILLESLASTSTAND -Q "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'JobApplications' AND COLUMN_NAME IN ('Role', 'Status')"
+
+# Build and test
+dotnet build
+dotnet run --project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+```
+
+**Database Verification Results:**
+```
+Role    2000 ✅
+Status  2000 ✅
+```
+
+**Code Files Modified:**
+```
+✓ Infrastructure/Data/ApplicationDbContext.cs (Fluent API updated)
+✓ Infrastructure/Migrations/<timestamp>_UpdateRoleAndStatusLength.cs (Migration created)
+✓ Infrastructure/Repositories/JobApplicationRepository.cs (Search fix: EF.Functions.Like)
+```
+
+**Migration Files Created:**
+```
+✓ Migrations/<timestamp>_UpdateRoleAndStatusLength.cs
+✓ Migrations/<timestamp>_UpdateRoleAndStatusLength.Designer.cs
+✓ Migrations/ApplicationDbContextModelSnapshot.cs (updated)
+```
+
+---
+
+
 
 
 

@@ -30,6 +30,19 @@ namespace AchillesLastStand.API.Controllers
             return Ok(applications);
         }
 
+        // GET: api/jobapplications/search?company=Microsoft&role=Developer
+        // Search/filter job applications by company and/or role
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<JobApplication>>> Search(
+            [FromQuery] string? company = null,
+            [FromQuery] string? role = null)
+        {
+            var applications = await _repository.SearchAsync(company, role);
+            return Ok(applications);
+        }
+
+
         // GET: api/jobapplications/5
         // Retrieves a single job application by ID
         [HttpGet("{id}")]

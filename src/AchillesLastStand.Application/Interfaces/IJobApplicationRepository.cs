@@ -19,5 +19,8 @@ namespace AchillesLastStand.Application.Interfaces
         Task UpdateAsync(JobApplication jobApplication);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+
+        // FILTERING/SEARCH - Query with optional filters
+        Task<IEnumerable<JobApplication>> SearchAsync(string? company = null, string? role = null);
     }
 }

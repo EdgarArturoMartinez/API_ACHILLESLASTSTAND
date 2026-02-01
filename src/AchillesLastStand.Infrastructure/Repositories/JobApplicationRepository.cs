@@ -74,5 +74,31 @@ namespace AchillesLastStand.Infrastructure.Repositories
         {
             return await _context.JobApplications.AnyAsync(x => x.Id == id);
         }
+
+        // FILTERING/SEARCH - Implements query with optional filters
+        // Uses LINQ to filter data based on optional parameters
+        // AsNoTracking for read-only performance optimization
+        // NOTE: EF.Functions.Like() is used for case-insensitive partial matching (translates to SQL LIKE)
+        public async Task<IEnumerable<JobApplication>> SearchAsync(string? company = null, string? role = null)
+        {
+            // Start with all job applications
+            IQueryable<JobApplication> query = _context.JobApplications.AsNoTracking();
+
+            // Apply company filter if provided (case-insensitive, partial match)
+            // SQL Server LIKE is case-insensitive by default
+            if (!string.IsNullOrWhiteSpace(company))
+            {
+                query = query.Where(j => EF.Functions.Like(j.Company, $"%{company}%"));
+            }
+
+            // Apply role filter if provided (case-insensitive, partial match)
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                query = query.Where(j => EF.Functions.Like(j.Role, $"%{role}%"));
+            }
+
+            // Execute query and return results
+            return await query.ToListAsync();
+        }
     }
 }

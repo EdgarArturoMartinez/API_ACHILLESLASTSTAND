@@ -47,7 +47,7 @@ namespace AchillesLastStand.Infrastructure.Data
                 // Configure Role property
                 entity.Property(e => e.Role)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(2000);
 
                 // Configure AppliedFromPlatform property
                 entity.Property(e => e.AppliedFromPlatform)
@@ -57,7 +57,7 @@ namespace AchillesLastStand.Infrastructure.Data
                 // Configure Status property
                 entity.Property(e => e.Status)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(2000);
 
                 // Configure Payment property (nullable decimal)
                 entity.Property(e => e.Payment)
