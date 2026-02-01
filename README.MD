@@ -1,57 +1,111 @@
-﻿Hey Claude,
+﻿# 📘 Achilles Last Stand API - Clean Architecture Project
 
-This is the README.MD of a big project that we are working day by day, this document is your checkpoint to see what you have to do, were we are, what have we done, and based on the structure of the local folder : 
-C:\Arthur\Development\2026\AchillesLastStandAPI and all the files inside, you will decide the next Step.
+## 📍 Project Overview
 
-You are acting as the best .Net C# /Architecture / Developer / Software Designer / API Integrator / Tech Interviewer / Entity Framework Expert / Design Pattern Expert / SOLID Expert / Async-Await Expert / API Designer.
+**Project Path:** `C:\Arthur\Development\2026\AchillesLastStandAPI`
 
-We are building an ASP.NET Core Project root folder = "C:\Arthur\Development\2026\AchillesLastStandAPI" with Best practices, Clean Architecture RESTFUL API that will grow day by day until we achieve a robust solution 
-with SOLID principals , Design Patterns, Best Practices, Best design software techniques, clean code that I could refer to learn from you and be the best .Net Back End Developer and know most as possible for my interviews, 
-next projects and technical test in plattforms.
-
-The first project that we are building is an ASP.NET Core RESTFUL API to Search , Update, Delete and create rows for a table in my local MSSQLSERVER instance in the database DBACHILLESLASTSTAND, that can save the 
-ID(identity), AppliedDate, Company, Role, AppliedFromPlattform, Status, Payment, Contact, Observation.
-
-What is the strategy that we are using:
-- You won't code or make the action, I will do it
-- You will suggest the Next #Step or instruction and I will execute it
-- I will try to do my best effort to complete it
-- I will tipe /DONECLAUDE if I was able to complete the instruction and
-  You will check if your instruction was well completed by me, if so, you will add to the current document without loosing information at the end the # Step that I completed succesfully, 
-  explaining what we did, why was important , with information that I could understand and say in technical interviews, after you finish adding the info in the MD document you can add,
-  comments in my code when we achieve good practices, for example (With this we achieve SOLID, DESIGN PATTERNS, OOP, this is recommended on production, this is the domain/infrastructure layer, this is the service and is used to....,
-  this is the controller and is used to.....etc.. what ever you consider important I need to learn or point),
-- Update the "CURRENT STATUS" section, check "Last Completed Step" and "Next Step,Update ### Files Created (Quick Check),  Update table "Steps Progress Summary" (mark ✅ completed step), Update the Date, after that you can continue with the next step or instruction. 
-- I will type /HELPCLAUDE if I'm not able to complete your step or instruction, in this case please try to explain with more details until I can achieve it and type /DONECLAUDE.
-- 
-- If I type /ENDDAYCLAUDE, please Update the "CURRENT STATUS" section, check "Last Completed Step" and "Next Step, Update ### Files Created (Quick Check),  Update table "Steps Progress Summary" (mark ✅ completed step), Update the Date,
-  Then commit and push the code to the repository: https://github.com/EdgarArturoMartinez/API_ACHILLESLASTSTAND
-
-- 
-Plese execute the following PowerShell commands to help you verify the current state of the project:
-- # Verificar estructura de carpetas
-Get-ChildItem .\src\ -Recurse -Directory -Depth 1
-
-# Verificar archivos .cs creados
-Get-ChildItem .\src\ -Recurse -Filter "*.cs" -File
-
-# Ver último commit
-git log -1 --oneline --date=short
-
-# Ver paquetes NuGet instalados
-dotnet list .\src\AchillesLastStand.Infrastructure\ package
+This is a **Clean Architecture ASP.NET Core REST API** built with best practices, SOLID principles, and design patterns. This README serves as a checkpoint to track progress, document what we've accomplished, and guide the next steps in our development journey.
 
 ---
 
-Now, here is the current status of the project:
+## 🎯 Project Goal
 
-## 🎯 CURRENT STATUS - [Last Updated: January 31, 2026]
+Build a **production-ready ASP.NET Core REST API** to manage job applications with CRUD operations against a SQL Server database (`DBACHILLESLASTSTAND`).
+
+**Database Fields:**
+- `Id` (identity)
+- `AppliedDate`
+- `Company`
+- `Role`
+- `AppliedFromPlatform`
+- `Status`
+- `Payment`
+- `Contact`
+- `Observation`
+
+**Current State:** ✅ **Base CRUD API fully functional with Clean Architecture, EF Core, and Swagger documentation!**
+
+---
+
+## 🚀 Roadmap - Next Enhancements
+
+We'll improve the API incrementally with these features:
+
+1. **Configure a search by company and role** - Filtering capabilities
+2. **DTOs (Data Transfer Objects)** - Separate API models from domain entities
+3. **AutoMapper** - Automatic mapping between entities and DTOs
+4. **FluentValidation** - Advanced validation rules
+5. **Global Exception Handling** - Middleware for consistent error responses
+6. **Logging (Serilog)** - Structured logging
+7. **Authentication/Authorization (JWT)** - Secure endpoints
+8. **Unit Tests (xUnit + Moq)** - Test repositories and controllers
+9. **API Versioning** - Version your endpoints
+10. **HATEOAS** - Hypermedia links in responses
+11. **Health Checks** - Endpoint for monitoring
+
+---
+
+## 📋 Development Workflow
+
+### **Your Role:**
+You are the **expert .NET C# architect/developer** guiding me through best practices for Clean Architecture, SOLID principles, Design Patterns, EF Core, Async/Await, and RESTful API design.
+
+### **My Role:**
+I execute your instructions and write all the code myself to learn by doing.
+
+### **Our Process:**
+
+1. **You suggest** the next step or instruction
+2. **I execute** the step to the best of my ability
+3. **When complete**, I type **`/DONECLAUDE`**
+4. **You verify** my work and:
+   - Add detailed step documentation to this README (with interview knowledge)
+   - Add educational comments to my code
+   - Update the "CURRENT STATUS" section
+   - Update the "Files Created" checklist
+   - Update the "Steps Progress Summary" table
+   - Provide the next instruction
+
+5. **If I need help**, I type **`/HELPCLAUDE`** and you provide more detailed guidance
+
+6. **When ending a session**, I type **`/ENDDAYCLAUDE`** and you:
+   - Update all status sections
+   - Commit and push code to: `https://github.com/EdgarArturoMartinez/API_ACHILLESLASTSTAND`
+
+---
+
+## 🔍 Verification Commands
+
+Execute these PowerShell commands to verify project state:
+
+```powershell
+# Verify folder structure
+Get-ChildItem .\src\ -Recurse -Directory -Depth 1
+
+# Verify C# files created
+Get-ChildItem .\src\ -Recurse -Filter "*.cs" -File
+
+# View last commit
+git log -1 --oneline --date=short
+
+# View installed NuGet packages
+dotnet list .\src\AchillesLastStand.Infrastructure\ package
+```
+
+---
+
+## 🎯 CURRENT STATUS - [Last Updated: February 1, 2026]
+
+### 📊 Project Phases:
+- **Phase 1 - Base CRUD API**: ✅ **COMPLETE** (Steps 1-8)
+- **Phase 2 - Enhancements**: 🚀 **IN PROGRESS** (Steps 9-19)
 
 ### Quick Status:
-- **Last Completed Step**: #Step 6 - Configure Dependency Injection in API Layer
-- **Next Step**: #Step 7 - Create Database Migration
-- **Database Status**: ❌ Not created yet (pending migrations)
-- **Current Sprint Goal**: Create and apply database migration to SQL Server
+- **Last Completed Step**: #Step 8 - Create API Controller with RESTful Endpoints ✅
+- **Next Step**: #Step 9 - Add Search/Filtering by Company and Role 🎯
+- **Database Status**: ✅ Database DBACHILLESLASTSTAND created and operational
+- **API Status**: ✅ RESTful API with Swagger documentation ready
+- **Current Sprint Goal**: Add filtering capabilities for Company and Role
 
 ### Files Created (Quick Check):
 ```
@@ -59,13 +113,19 @@ Now, here is the current status of the project:
 ✅ Application/Interfaces/IJobApplicationRepository.cs
 ✅ Infrastructure/Data/ApplicationDbContext.cs
 ✅ Infrastructure/Repositories/JobApplicationRepository.cs
-✅ API/Program.cs (DI Configured)
+✅ API/Program.cs (Controllers + Swagger Configured)
 ✅ API/appsettings.json (Connection String Configured)
-⏳ Database Migration (Next)
-⏳ API/Controllers/JobApplicationsController.cs (Pending)
+✅ Infrastructure/Migrations/InitialCreate.cs (Database Migration)
+✅ Database: DBACHILLESLASTSTAND (Created & Applied)
+✅ API/Controllers/JobApplicationsController.cs (RESTful Endpoints)
+
+🎉 Phase 1 COMPLETE - Base CRUD API Ready!
+🚀 Phase 2 Starting - Enhancements and Best Practices
 ```
 
 ### Steps Progress Summary:
+
+#### **Phase 1: Base CRUD API (Complete)** ✅
 | Step | Title | Status | Date Completed |
 |------|-------|--------|----------------|
 | #1 | Solution & Clean Architecture Structure | ✅ | Jan 31, 2026 |
@@ -74,8 +134,25 @@ Now, here is the current status of the project:
 | #4 | DbContext & EF Core Setup | ✅ | Jan 31, 2026 |
 | #5 | Repository Implementation | ✅ | Jan 31, 2026 |
 | #6 | Configure Dependency Injection | ✅ | Jan 31, 2026 |
-| #7 | Create Database Migration | ⏳ **NEXT** | - |
-| #8 | Create Controller & Endpoints | 🔜 Pending | - |
+| #7 | Create Database Migration | ✅ | Feb 1, 2026 |
+| #8 | Create Controller & Endpoints | ✅ | Feb 1, 2026 |
+
+#### **Phase 2: Enhancements (In Progress)** 🚀
+| Step | Title | Status | Date Completed |
+|------|-------|--------|----------------|
+| #9 | Search/Filtering by Company and Role | ⏳ **NEXT** | - |
+| #10 | DTOs (Data Transfer Objects) | 🔜 Pending | - |
+| #11 | AutoMapper Configuration | 🔜 Pending | - |
+| #12 | FluentValidation | 🔜 Pending | - |
+| #13 | Global Exception Handling Middleware | 🔜 Pending | - |
+| #14 | Logging with Serilog | 🔜 Pending | - |
+| #15 | Authentication/Authorization (JWT) | 🔜 Pending | - |
+| #16 | Unit Tests (xUnit + Moq) | 🔜 Pending | - |
+| #17 | API Versioning | 🔜 Pending | - |
+| #18 | HATEOAS Implementation | 🔜 Pending | - |
+| #19 | Health Checks | 🔜 Pending | - |
+
+
 
 ---
 
@@ -713,3 +790,414 @@ AchillesLastStandAPI/
 ```
 
 ---
+
+### #Step 7 - Create and Apply EF Core Database Migration ✅ COMPLETED
+
+**What we did:**
+- Updated `dotnet-ef` global tools to latest version
+- Added `Microsoft.EntityFrameworkCore.Design` package to API project (required for migrations)
+- Created initial migration `InitialCreate` using EF Core CLI
+- Applied migration to create database `DBACHILLESLASTSTAND` and table `JobApplications`
+- Verified database and table creation in SQL Server
+
+**Migration Files Created:**
+- `20260201200953_InitialCreate.cs`: Contains `Up()` and `Down()` methods for migration
+- `20260201200953_InitialCreate.Designer.cs`: Migration metadata and model snapshot
+- `ApplicationDbContextModelSnapshot.cs`: Current state of the EF Core model
+
+**Why this is important (Interview Knowledge):**
+
+**Code-First Migrations (EF Core Concept):**
+- **Definition**: A feature that allows you to create and evolve database schema from C# code (DbContext and entities)
+- **Workflow**: Code → Migration → Database (opposite of Database-First approach)
+- **Benefits**:
+  - Database schema is versioned alongside application code
+  - Easy to recreate database from scratch
+  - Works seamlessly with source control (Git)
+  - Team collaboration - everyone gets same schema
+  - Automated deployment to different environments (Dev, QA, Prod)
+
+**Migration Components:**
+```csharp
+// Up() method - applies changes
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+    migrationBuilder.CreateTable(
+        name: "JobApplications",
+        columns: table => new { ... }
+    );
+}
+
+// Down() method - reverts changes (rollback)
+protected override void Down(MigrationBuilder migrationBuilder)
+{
+    migrationBuilder.DropTable(name: "JobApplications");
+}
+```
+
+**Migration Commands (Critical for Interviews):**
+```powershell
+# CREATE a new migration
+dotnet ef migrations add <MigrationName> --project <InfraProject> --startup-project <APIProject>
+
+# APPLY migrations to database
+dotnet ef database update --project <InfraProject> --startup-project <APIProject>
+
+# REMOVE last migration (if not applied)
+dotnet ef migrations remove --project <InfraProject> --startup-project <APIProject>
+
+# ROLLBACK to specific migration
+dotnet ef database update <PreviousMigrationName> --project <InfraProject> --startup-project <APIProject>
+
+# GENERATE SQL script (for manual deployment)
+dotnet ef migrations script --project <InfraProject> --startup-project <APIProject>
+```
+
+**Migration History Table:**
+- `__EFMigrationsHistory` table is created automatically
+- Tracks which migrations have been applied
+- Each row contains: MigrationId and ProductVersion
+- EF Core checks this table before applying migrations
+- Prevents applying same migration twice
+
+**Database Created:**
+- Database name: `DBACHILLESLASTSTAND` (from connection string)
+- Table: `JobApplications` with columns:
+  - `Id` (int, PRIMARY KEY, IDENTITY(1,1))
+  - `AppliedDate` (datetime2, NOT NULL)
+  - `Company` (nvarchar(200), NOT NULL)
+  - `Role` (nvarchar(100), NOT NULL)
+  - `AppliedFromPlatform` (nvarchar(50), NOT NULL)
+  - `Status` (nvarchar(50), NOT NULL)
+  - `Payment` (decimal(18,2), NULL)
+  - `Contact` (nvarchar(200), NULL)
+  - `Observation` (nvarchar(max), NULL)
+
+**Why Use Separate --project and --startup-project?**
+- `--project`: Where migrations are stored (Infrastructure layer - contains DbContext)
+- `--startup-project`: Where configuration is read (API layer - has appsettings.json with connection string)
+- **Separation of Concerns**: Migrations live in Infrastructure, configuration lives in API
+
+**Typical Interview Questions Answered:**
+- **Q: What are EF Core Migrations?** A: A version control system for your database schema that allows you to evolve the database over time while preserving existing data.
+- **Q: Code-First vs Database-First?** A: Code-First starts with C# entities and generates database; Database-First starts with existing database and generates C# entities.
+- **Q: How do migrations handle production data?** A: Migrations preserve data by default. For destructive changes (drop column), you must handle data migration explicitly.
+- **Q: Can you rollback a migration?** A: Yes, using `dotnet ef database update <PreviousMigrationName>` which executes the Down() method.
+- **Q: What is the __EFMigrationsHistory table?** A: It tracks which migrations have been applied to the database, preventing duplicate applications.
+
+**Commands executed:**
+```powershell
+dotnet tool update --global dotnet-ef
+dotnet add .\src\AchillesLastStand.API\AchillesLastStand.API.csproj package Microsoft.EntityFrameworkCore.Design
+dotnet ef migrations add InitialCreate --project .\src\AchillesLastStand.Infrastructure\AchillesLastStand.Infrastructure.csproj --startup-project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+dotnet ef database update --project .\src\AchillesLastStand.Infrastructure\AchillesLastStand.Infrastructure.csproj --startup-project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+sqlcmd -S localhost -Q "SELECT name FROM sys.databases WHERE name = 'DBACHILLESLASTSTAND'"
+```
+
+**Updated Project Structure:**
+```
+AchillesLastStandAPI/
+├── src/
+│   ├── AchillesLastStand.Domain/
+│   │   └── Entities/
+│   │       └── JobApplication.cs
+│   ├── AchillesLastStand.Application/
+│   │   └── Interfaces/
+│   │       └── IJobApplicationRepository.cs
+│   ├── AchillesLastStand.Infrastructure/
+│   │   ├── Data/
+│   │   │   └── ApplicationDbContext.cs
+│   │   ├── Migrations/                                    # ✓ NEW!
+│   │   │   ├── 20260201200953_InitialCreate.cs            # ✓ Migration Up/Down
+│   │   │   ├── 20260201200953_InitialCreate.Designer.cs   # ✓ Migration metadata
+│   │   │   └── ApplicationDbContextModelSnapshot.cs       # ✓ Model snapshot
+│   │   └── Repositories/
+│   │       └── JobApplicationRepository.cs
+│   └── AchillesLastStand.API/
+│       ├── Program.cs
+│       └── appsettings.json
+├── AchillesLastStand.slnx
+└── README.MD
+```
+
+---
+
+
+### #Step 8 - Create API Controller with RESTful Endpoints ✅ COMPLETED
+
+**What we did:**
+- Created `Controllers` folder in API project
+- Created `JobApplicationsController.cs` with RESTful endpoints
+- Implemented 5 HTTP methods following REST conventions:
+  - **GET** `/api/jobapplications` - Retrieve all job applications
+  - **GET** `/api/jobapplications/{id}` - Retrieve single job application by ID
+  - **POST** `/api/jobapplications` - Create new job application
+  - **PUT** `/api/jobapplications/{id}` - Update existing job application
+  - **DELETE** `/api/jobapplications/{id}` - Delete job application
+- Added Swagger/OpenAPI documentation for API testing
+- Configured proper HTTP status codes for each endpoint
+- Used constructor injection for IJobApplicationRepository
+- Applied async/await throughout all endpoints
+
+**Program.cs Updates:**
+- Added `builder.Services.AddControllers()` - Enable MVC controllers
+- Added `builder.Services.AddEndpointsApiExplorer()` - Enable API explorer for Swagger
+- Added `builder.Services.AddSwaggerGen()` - Configure Swagger/OpenAPI
+- Added `app.UseSwagger()` and `app.UseSwaggerUI()` - Enable Swagger UI
+- Added `app.MapControllers()` - Map controller routes
+- Installed `Swashbuckle.AspNetCore` NuGet package for Swagger support
+
+**Why this is important (Interview Knowledge):**
+
+**REST API Principles (Critical Interview Topic):**
+- **Representational State Transfer (REST)**: An architectural style for designing networked applications
+- **Resource-Based**: URLs represent resources (e.g., `/api/jobapplications`)
+- **HTTP Verbs**: Use standard HTTP methods (GET, POST, PUT, DELETE) for CRUD operations
+- **Stateless**: Each request contains all information needed; no session state on server
+- **Uniform Interface**: Consistent naming and structure across all endpoints
+
+**HTTP Methods and Their Purpose:**
+```csharp
+// GET - Retrieve data (Safe & Idempotent)
+[HttpGet] - Returns 200 OK with data, or 404 Not Found
+
+// POST - Create new resource (Not Idempotent)
+[HttpPost] - Returns 201 Created with Location header, or 400 Bad Request
+
+// PUT - Update entire resource (Idempotent)
+[HttpPut("{id}")] - Returns 204 No Content, or 404 Not Found, or 400 Bad Request
+
+// DELETE - Remove resource (Idempotent)
+[HttpDelete("{id}")] - Returns 204 No Content, or 404 Not Found
+
+// PATCH - Partial update (Not covered, but commonly asked)
+[HttpPatch("{id}")] - Updates specific fields only
+```
+
+**HTTP Status Codes (Must Know for Interviews):**
+- **200 OK**: Request succeeded, returning data (GET)
+- **201 Created**: Resource created successfully (POST)
+- **204 No Content**: Success, but no data to return (PUT, DELETE)
+- **400 Bad Request**: Invalid input/validation failed
+- **404 Not Found**: Resource doesn't exist
+- **500 Internal Server Error**: Server-side error (avoid by proper error handling)
+
+**Other Important Codes:**
+- **401 Unauthorized**: Authentication required
+- **403 Forbidden**: Authenticated but not authorized
+- **409 Conflict**: Resource conflict (e.g., duplicate entry)
+- **422 Unprocessable Entity**: Validation error
+
+**Controller Attributes Explained:**
+```csharp
+[ApiController] 
+// - Automatic model validation
+// - Automatic HTTP 400 responses for validation errors
+// - Binding source parameter inference ([FromBody], [FromRoute], etc.)
+// - Problem details for error responses
+
+[Route("api/[controller]")]
+// - Defines base URL: /api/jobapplications
+// - [controller] is replaced with controller name (minus "Controller")
+// - RESTful convention: plural noun for collections
+
+[HttpGet("{id}")]
+// - Route template: combines with [Route] to form /api/jobapplications/5
+// - {id} is route parameter, bound from URL
+
+[ProducesResponseType(StatusCodes.Status200OK)]
+// - Documents possible response types for Swagger/OpenAPI
+// - Helps API consumers understand what to expect
+// - Improves API documentation
+```
+
+**CreatedAtAction Explained:**
+```csharp
+return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+```
+- Returns **201 Created** status code
+- Sets **Location** header: `/api/jobapplications/123`
+- Returns the created resource in response body
+- **nameof(GetById)**: Refers to the GetById action method
+- **new { id = created.Id }**: Route values for Location URL
+- **created**: The object to return in response body
+
+**ActionResult vs ActionResult<T>:**
+```csharp
+// ActionResult<JobApplication> - Strongly typed, better for Swagger
+public async Task<ActionResult<JobApplication>> GetById(int id)
+{
+    return Ok(application); // Can return JobApplication directly or wrapped in Ok()
+}
+
+// IActionResult - Not strongly typed, more flexible
+public async Task<IActionResult> Update(int id, JobApplication app)
+{
+    return NoContent(); // Can return any IActionResult
+}
+```
+
+**Swagger/OpenAPI (Essential for Modern APIs):**
+- **Swagger**: Interactive API documentation and testing UI
+- **OpenAPI**: Specification format for describing REST APIs
+- **Swashbuckle.AspNetCore**: .NET implementation of Swagger
+- **Benefits**:
+  - Auto-generated documentation from code
+  - Interactive API testing (no Postman needed for simple tests)
+  - Client SDK generation
+  - API contract definition
+- **Access**: `http://localhost:5190/swagger` (or https://localhost:7XXX/swagger)
+
+**Dependency Injection in Controller:**
+```csharp
+public JobApplicationsController(IJobApplicationRepository repository)
+{
+    _repository = repository;
+}
+```
+- **Constructor Injection**: ASP.NET Core DI injects IJobApplicationRepository
+- **Loose Coupling**: Controller depends on interface, not concrete class
+- **Testability**: Easy to mock IJobApplicationRepository for unit tests
+- **Single Responsibility**: Controller only handles HTTP; repository handles data
+
+**Model Binding and Validation:**
+```csharp
+public async Task<ActionResult> Create([FromBody] JobApplication jobApplication)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+    // ...
+}
+```
+- **[FromBody]**: Tells ASP.NET to deserialize JSON from request body
+- **ModelState.IsValid**: Checks data annotations and validation rules
+- **BadRequest(ModelState)**: Returns 400 with validation errors
+- **Note**: With [ApiController], this is automatic (don't need explicit check)
+
+**Async/Await in Controllers (Performance Critical):**
+```csharp
+public async Task<ActionResult<IEnumerable<JobApplication>>> GetAll()
+{
+    var applications = await _repository.GetAllAsync();
+    return Ok(applications);
+}
+```
+- **async/await**: Non-blocking I/O for database calls
+- **Task<ActionResult<T>>**: Represents asynchronous operation returning ActionResult<T>
+- **Benefits**: Thread doesn't block waiting for DB; can handle other requests
+- **Scalability**: Critical for high-traffic APIs
+
+**RESTful URL Design Best Practices:**
+```
+✅ GOOD:
+GET    /api/jobapplications           (Get all)
+GET    /api/jobapplications/5         (Get by ID)
+POST   /api/jobapplications           (Create)
+PUT    /api/jobapplications/5         (Update)
+DELETE /api/jobapplications/5         (Delete)
+
+❌ BAD:
+GET    /api/GetAllJobApplications     (Verb in URL)
+POST   /api/CreateJobApplication      (Verb in URL)
+GET    /api/jobapplication?id=5       (Singular, query param for ID)
+```
+
+**Idempotency (Important Concept):**
+- **Idempotent**: Multiple identical requests have same effect as single request
+- **GET, PUT, DELETE**: Idempotent (safe to retry)
+- **POST**: NOT idempotent (creates new resource each time)
+- **Why It Matters**: Network failures, retry logic, distributed systems
+
+**Content Negotiation:**
+- **Accept Header**: Client specifies desired format (application/json, application/xml)
+- **ASP.NET Core**: Defaults to JSON, can configure XML or custom formats
+- **ProducesResponseType**: Documents what format is returned
+
+**Typical Interview Questions Answered:**
+- **Q: What is REST?** A: Representational State Transfer, an architectural style using HTTP methods on resource URLs for CRUD operations.
+- **Q: Difference between PUT and POST?** A: PUT updates existing resource (idempotent), POST creates new resource (not idempotent).
+- **Q: Why return 204 No Content instead of 200 OK?** A: 204 indicates success without response body, saving bandwidth. Standard for PUT/DELETE.
+- **Q: What is the purpose of CreatedAtAction?** A: Returns 201 Created with Location header pointing to new resource, following REST best practices.
+- **Q: Why use async/await in controllers?** A: To free threads during I/O operations, improving scalability and performance.
+- **Q: What does [ApiController] attribute do?** A: Enables automatic model validation, binding source inference, and better error handling.
+- **Q: What is Swagger/OpenAPI?** A: Interactive API documentation and testing tool; OpenAPI is the specification, Swagger is the implementation.
+- **Q: Difference between ActionResult and ActionResult<T>?** A: ActionResult<T> is strongly typed, better for documentation and Swagger; ActionResult is more flexible.
+
+**Production Best Practices Achieved:**
+- ✅ **RESTful Design**: Standard HTTP verbs and status codes
+- ✅ **Async/Await**: Non-blocking I/O throughout
+- ✅ **Dependency Injection**: Loose coupling via interfaces
+- ✅ **API Documentation**: Swagger/OpenAPI auto-generated
+- ✅ **Proper Status Codes**: 200, 201, 204, 400, 404
+- ✅ **Model Validation**: Automatic with [ApiController]
+- ✅ **CreatedAtAction**: RESTful 201 responses with Location
+- ✅ **Error Handling**: Proper NotFound and BadRequest responses
+- ✅ **Clean Code**: Single Responsibility, readable methods
+- ✅ **SOLID Principles**: All five applied throughout
+
+**Commands executed:**
+```powershell
+# Create Controllers folder
+New-Item -Path .\src\AchillesLastStand.API\Controllers -ItemType Directory
+
+# Create controller file
+New-Item -Path .\src\AchillesLastStand.API\Controllers\JobApplicationsController.cs -ItemType File
+
+# Add Swagger NuGet package
+dotnet add .\src\AchillesLastStand.API\AchillesLastStand.API.csproj package Swashbuckle.AspNetCore
+
+# Build and verify
+dotnet build
+
+# Run the API
+dotnet run --project .\src\AchillesLastStand.API\AchillesLastStand.API.csproj
+
+# Access Swagger UI
+# http://localhost:5190/swagger or https://localhost:7XXX/swagger
+```
+
+**API Endpoints Created:**
+
+| Method | Endpoint | Description | Request Body | Response | Status Codes |
+|--------|----------|-------------|--------------|----------|--------------|
+| GET | `/api/jobapplications` | Get all job applications | None | `JobApplication[]` | 200 OK |
+| GET | `/api/jobapplications/{id}` | Get job application by ID | None | `JobApplication` | 200 OK, 404 Not Found |
+| POST | `/api/jobapplications` | Create new job application | `JobApplication` | `JobApplication` | 201 Created, 400 Bad Request |
+| PUT | `/api/jobapplications/{id}` | Update job application | `JobApplication` | None | 204 No Content, 400 Bad Request, 404 Not Found |
+| DELETE | `/api/jobapplications/{id}` | Delete job application | None | None | 204 No Content, 404 Not Found |
+
+**Updated Project Structure:**
+```
+AchillesLastStandAPI/
+├── src/
+│   ├── AchillesLastStand.Domain/
+│   │   └── Entities/
+│   │       └── JobApplication.cs
+│   ├── AchillesLastStand.Application/
+│   │   └── Interfaces/
+│   │       └── IJobApplicationRepository.cs
+│   ├── AchillesLastStand.Infrastructure/
+│   │   ├── Data/
+│   │   │   └── ApplicationDbContext.cs
+│   │   ├── Migrations/
+│   │   │   ├── 20260201200953_InitialCreate.cs
+│   │   │   ├── 20260201200953_InitialCreate.Designer.cs
+│   │   │   └── ApplicationDbContextModelSnapshot.cs
+│   │   └── Repositories/
+│   │       └── JobApplicationRepository.cs
+│   └── AchillesLastStand.API/
+│       ├── Controllers/                                # ✓ NEW!
+│       │   └── JobApplicationsController.cs            # ✓ RESTful Controller
+│       ├── Program.cs                                  # ✓ Updated with Swagger
+│       └── appsettings.json
+├── AchillesLastStand.slnx
+└── README.MD
+```
+
+---
+
+
+
+

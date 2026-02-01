@@ -3,12 +3,14 @@ using AchillesLastStand.Infrastructure.Data;
 using AchillesLastStand.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// ADD CONTROLLERS - Required for API controllers to work
+builder.Services.AddControllers();
+
+// ADD SWAGGER - API documentation and testing UI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // DATABASE CONFIGURATION - Entity Framework Core with SQL Server
 // This registers the DbContext in the DI container with the connection string
@@ -41,38 +43,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// ENABLE CORS
 app.UseCors("AllowAll");
 
-// Configure the HTTP request pipeline.
+// CONFIGURE SWAGGER UI (only in Development)
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// MAP CONTROLLERS - This makes your JobApplicationsController work!
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
