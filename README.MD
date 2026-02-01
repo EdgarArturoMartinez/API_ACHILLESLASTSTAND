@@ -23,6 +23,7 @@ What is the strategy that we are using:
   this is the controller and is used to.....etc.. what ever you consider important I need to learn or point),
 - Update the "CURRENT STATUS" section, check "Last Completed Step" and "Next Step,Update ### Files Created (Quick Check),  Update table "Steps Progress Summary" (mark ✅ completed step), Update the Date, after that you can continue with the next step or instruction. 
 - I will type /HELPCLAUDE if I'm not able to complete your step or instruction, in this case please try to explain with more details until I can achieve it and type /DONECLAUDE.
+- 
 - If I type /ENDDAYCLAUDE, please Update the "CURRENT STATUS" section, check "Last Completed Step" and "Next Step, Update ### Files Created (Quick Check),  Update table "Steps Progress Summary" (mark ✅ completed step), Update the Date,
   Then commit and push the code to the repository: https://github.com/EdgarArturoMartinez/API_ACHILLESLASTSTAND
 
@@ -47,10 +48,10 @@ Now, here is the current status of the project:
 ## 🎯 CURRENT STATUS - [Last Updated: January 31, 2026]
 
 ### Quick Status:
-- **Last Completed Step**: #Step 5 - Implement Repository Pattern (Concrete Implementation)
-- **Next Step**: #Step 6 - Configure Dependency Injection in API Layer
+- **Last Completed Step**: #Step 6 - Configure Dependency Injection in API Layer
+- **Next Step**: #Step 7 - Create Database Migration
 - **Database Status**: ❌ Not created yet (pending migrations)
-- **Current Sprint Goal**: Configure DI container and prepare for database migration
+- **Current Sprint Goal**: Create and apply database migration to SQL Server
 
 ### Files Created (Quick Check):
 ```
@@ -58,8 +59,9 @@ Now, here is the current status of the project:
 ✅ Application/Interfaces/IJobApplicationRepository.cs
 ✅ Infrastructure/Data/ApplicationDbContext.cs
 ✅ Infrastructure/Repositories/JobApplicationRepository.cs
-⏳ API/Program.cs (DI Configuration - Next)
-⏳ Database Migration (Pending)
+✅ API/Program.cs (DI Configured)
+✅ API/appsettings.json (Connection String Configured)
+⏳ Database Migration (Next)
 ⏳ API/Controllers/JobApplicationsController.cs (Pending)
 ```
 
@@ -71,8 +73,8 @@ Now, here is the current status of the project:
 | #3 | Repository Interface (IJobApplicationRepository) | ✅ | Jan 31, 2026 |
 | #4 | DbContext & EF Core Setup | ✅ | Jan 31, 2026 |
 | #5 | Repository Implementation | ✅ | Jan 31, 2026 |
-| #6 | Configure Dependency Injection | ⏳ **NEXT** | - |
-| #7 | Create Database Migration | 🔜 Pending | - |
+| #6 | Configure Dependency Injection | ✅ | Jan 31, 2026 |
+| #7 | Create Database Migration | ⏳ **NEXT** | - |
 | #8 | Create Controller & Endpoints | 🔜 Pending | - |
 
 ---
@@ -529,6 +531,183 @@ AchillesLastStandAPI/
 │   │   └── Repositories/
 │   │       └── JobApplicationRepository.cs    # ✓ Repository implementation created
 │   └── AchillesLastStand.API/
+├── AchillesLastStand.slnx
+└── README.MD
+```
+
+---
+
+### #Step 6 - Configure Dependency Injection in API Layer ✅ COMPLETED
+
+**What we did:**
+- Added using statements to `Program.cs` for Application and Infrastructure namespaces
+- Configured DbContext in the DI container with SQL Server provider
+- Registered the Repository implementation with Scoped lifetime
+- Configured CORS policy to allow frontend applications to consume the API
+- Added connection string to `appsettings.json` for the DBACHILLESLASTSTAND database
+- Implemented retry logic for database connection resilience
+- Applied CORS middleware to the HTTP request pipeline
+
+**Why this is important (Interview Knowledge):**
+
+**Dependency Injection (DI) Container:**
+- **Definition**: A mechanism that manages object creation, lifetime, and dependency resolution automatically
+- **Purpose**: Implements Inversion of Control (IoC) principle - the framework controls object creation, not your code
+- **ASP.NET Core Built-in DI**: The framework provides a powerful DI container out of the box (`IServiceCollection`)
+- **Benefits**:
+  - Loose coupling between components
+  - Easier unit testing (can inject mocks)
+  - Centralized configuration
+  - Automatic lifetime management
+  - Better maintainability
+
+**Service Lifetimes (Critical Interview Topic):**
+```csharp
+// SCOPED - One instance per HTTP request (our choice for Repository)
+builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+
+// TRANSIENT - New instance every time it's requested
+builder.Services.AddTransient<ISomeService, SomeService>();
+
+// SINGLETON - One instance for the entire application lifetime
+builder.Services.AddSingleton<ISomeService, SomeService>();
+```
+
+**Why Scoped for Repository?**
+- DbContext is registered as Scoped by default
+- Repository depends on DbContext
+- **Rule**: Services depending on Scoped services must also be Scoped (or Transient)
+- Scoped = one instance per HTTP request = perfect for web APIs
+- Each request gets its own DbContext and Repository instance
+- After request completes, both are disposed automatically
+
+**DbContext Configuration:**
+```csharp
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null
+        )
+    )
+);
+```
+- **Connection String from appsettings.json**: Follows 12-Factor App principles (configuration separate from code)
+- **EnableRetryOnFailure**: Production best practice for handling transient database failures
+  - Automatically retries on temporary connection issues
+  - Prevents application crashes due to brief network issues
+  - Up to 5 retries with exponential backoff (max 30 seconds)
+
+**CORS (Cross-Origin Resource Sharing):**
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+```
+- **Purpose**: Allows frontend applications (React, Angular, etc.) to call this API from different domains
+- **Security Note**: `AllowAnyOrigin()` is fine for development; in production, specify exact origins:
+  ```csharp
+  policy.WithOrigins("https://myapp.com", "https://app.mycompany.com")
+  ```
+- **Interview Answer**: "CORS is a security feature that prevents unauthorized cross-domain requests. We configure it to allow our frontend apps to call the API."
+
+**Configuration Pattern (appsettings.json):**
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=DBACHILLESLASTSTAND;..."
+  }
+}
+```
+- **12-Factor App Principle**: Store configuration in environment, not in code
+- **Benefits**:
+  - Different connection strings for Development, Staging, Production
+  - Sensitive data (passwords) can be stored in Azure Key Vault or User Secrets
+  - No need to recompile code to change configuration
+- **Best Practice**: Use User Secrets for local development, Azure App Configuration for production
+
+**Dependency Inversion Principle (SOLID) - Completed:**
+```
+Program.cs (API Layer):
+  ↓ depends on
+IJobApplicationRepository (Application Layer - abstraction)
+  ↑ implemented by
+JobApplicationRepository (Infrastructure Layer - concrete)
+```
+- High-level module (API) depends on abstraction (interface)
+- Low-level module (Infrastructure) implements the abstraction
+- DI Container wires everything together at runtime
+- This is Dependency Inversion in action!
+
+**How DI Container Resolves Dependencies (Interview Gold):**
+1. Controller requests `IJobApplicationRepository` in constructor
+2. DI Container sees it's registered as `JobApplicationRepository` (Scoped)
+3. `JobApplicationRepository` constructor needs `ApplicationDbContext`
+4. DI Container sees DbContext is registered (Scoped)
+5. DI Container creates DbContext first
+6. Then creates JobApplicationRepository with DbContext injected
+7. Finally creates Controller with Repository injected
+8. All happen automatically - this is "Inversion of Control"
+
+**Typical Interview Questions Answered:**
+- **Q: What is Dependency Injection?** A: A design pattern where dependencies are "injected" from outside rather than created internally, enabling loose coupling and testability.
+- **Q: What are service lifetimes in ASP.NET Core?** A: Singleton (app lifetime), Scoped (per request), Transient (every time requested).
+- **Q: Why use Scoped for repositories?** A: Because DbContext is Scoped, and repositories depend on DbContext. One instance per request ensures proper disposal.
+- **Q: What is CORS and why do we need it?** A: Cross-Origin Resource Sharing allows browsers to make requests to APIs from different domains, necessary for SPA frontends.
+- **Q: Why store connection strings in appsettings.json?** A: Follows 12-Factor App principles, allows different configurations per environment without code changes.
+
+**Production Best Practices Achieved:**
+- ✅ **Dependency Injection**: All dependencies managed by DI container
+- ✅ **Service Lifetimes**: Correct lifetime (Scoped) for DbContext-dependent services
+- ✅ **Configuration Management**: Connection string in appsettings.json, not hardcoded
+- ✅ **Resilience**: Database retry logic for transient failures
+- ✅ **CORS**: API ready for frontend consumption
+- ✅ **SOLID Principles**: Dependency Inversion fully implemented
+- ✅ **Testability**: All services can be mocked via interfaces
+- ✅ **Loose Coupling**: No concrete dependencies, only abstractions
+
+**Commands executed:**
+```powershell
+# Modified Program.cs to add:
+# - Using statements for Application and Infrastructure
+# - DbContext registration with SQL Server and retry logic
+# - Repository registration with Scoped lifetime
+# - CORS configuration
+# - CORS middleware in pipeline
+
+# Modified appsettings.json to add:
+# - ConnectionStrings section with DefaultConnection
+
+# Verified build
+dotnet build
+```
+
+**Updated Project Structure:**
+```
+AchillesLastStandAPI/
+├── src/
+│   ├── AchillesLastStand.Domain/
+│   │   └── Entities/
+│   │       └── JobApplication.cs
+│   ├── AchillesLastStand.Application/
+│   │   └── Interfaces/
+│   │       └── IJobApplicationRepository.cs
+│   ├── AchillesLastStand.Infrastructure/
+│   │   ├── Data/
+│   │   │   └── ApplicationDbContext.cs
+│   │   └── Repositories/
+│   │       └── JobApplicationRepository.cs
+│   └── AchillesLastStand.API/
+│       ├── Program.cs                         # ✓ DI configured
+│       └── appsettings.json                   # ✓ Connection string added
 ├── AchillesLastStand.slnx
 └── README.MD
 ```
